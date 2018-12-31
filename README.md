@@ -41,6 +41,22 @@ Ending Program ...
 c:\ner_tagger>
 ```
 
+## Testing
+
+To run unit tests on the code, open a command line window and change to the directory where the code is located.
+The test waits for 2 minutes to give the Stanford Core NLP server time to get started and initialize.
+The wait time may have to be lengthened depending on system speed.
+
+```
+c:\ner_tagger>python test_ner_unittest.py
+Initializing CoreNLP....
+....
+----------------------------------------------------------------------
+Ran 4 tests in 17.239s
+
+OK
+```
+
 ## Author
 
 * **John Kussmann** - *Initial work*

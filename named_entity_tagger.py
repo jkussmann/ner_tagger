@@ -125,7 +125,7 @@ def get_spacy_named_entities(line):
             entity_list.append((normalized_label, str(ent)))
         else:
             entity_list.append((normalized_label, updated_string))
-
+    
     return entity_list
 
 
@@ -155,7 +155,7 @@ def get_nltk_named_entities(line):
         ]:
             entity_name = " ".join([a for (a, b) in subtree.leaves()])
             entity_list.append((subtree.label(), entity_name))
-
+    
     return entity_list
 
 
