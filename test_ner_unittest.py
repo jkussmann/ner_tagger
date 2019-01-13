@@ -1,23 +1,44 @@
+"""
+Unit tests for the NER tagger
+"""
+
 import unittest
 import warnings
 from sys import executable
 import socket
 import time
 from subprocess import Popen, CREATE_NEW_CONSOLE
-from named_entity_tagger import get_stanford_named_entities, get_spacy_named_entities, get_nltk_named_entities, get_named_entities
+from named_entity_tagger import (
+    get_stanford_named_entities,
+    get_spacy_named_entities,
+    get_nltk_named_entities,
+    get_named_entities,
+)
 
 
 def ignore_warnings(test_func):
+    """
+    Function to ignore test warnings that are not relevant
+    """
+
     def do_test(self, *args, **kwargs):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             test_func(self, *args, **kwargs)
+
     return do_test
 
+
 class TestNER(unittest.TestCase):
+    """
+    Class for testing named entity recognition functions
+    """
 
     @ignore_warnings
-    def test_stanford(self):        
+    def test_stanford(self):
+        """
+        Test for Stanford function.
+        """
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         result = sock.connect_ex(("localhost", 9000))
 
@@ -31,21 +52,59 @@ class TestNER(unittest.TestCase):
                 "Initializing CoreNLP...."
             )  # Give CoreNLP some time to get going before accepting input.
             time.sleep(120)
-        
-        self.assertEqual(get_stanford_named_entities("Apple announced it would negotiate a deal with Microsoft for $1 billion."), [('MONEY', '$ 1 billion')])
+
+        self.assertEqual(
+            get_stanford_named_entities(
+                "Apple announced it would negotiate a deal with Microsoft for $1 billion."
+            ),
+            [("MONEY", "$ 1 billion")],
+        )
         sock.close()
 
     @ignore_warnings
-    def test_spacy(self):        
-        self.assertEqual(get_spacy_named_entities("Apple announced it would negotiate a deal with Microsoft for $1 billion."), [('ORGANIZATION', 'Apple'), ('ORGANIZATION', 'Microsoft'), ('MONEY', '$1 billion')])
+    def test_spacy(self):
+        """
+        Test for Spacy
+        """
+        self.assertEqual(
+            get_spacy_named_entities(
+                "Apple announced it would negotiate a deal with Microsoft for $1 billion."
+            ),
+            [
+                ("ORGANIZATION", "Apple"),
+                ("ORGANIZATION", "Microsoft"),
+                ("MONEY", "$1 billion"),
+            ],
+        )
 
     @ignore_warnings
-    def test_nltk(self):        
-        self.assertEqual(get_nltk_named_entities("Apple announced it would negotiate a deal with Microsoft for $1 billion."), [('PERSON', 'Apple'), ('ORGANIZATION', 'Microsoft')])
+    def test_nltk(self):
+        """
+        Test for NLTK
+        """
+        self.assertEqual(
+            get_nltk_named_entities(
+                "Apple announced it would negotiate a deal with Microsoft for $1 billion."
+            ),
+            [("PERSON", "Apple"), ("ORGANIZATION", "Microsoft")],
+        )
 
     @ignore_warnings
-    def test_consolidated(self):        
-        self.assertEqual(get_named_entities("Apple announced it would negotiate a deal with Microsoft for $1 billion."), [('ORGANIZATION', 'Apple'), ('ORGANIZATION', 'Microsoft'), ('MONEY', '$1 billion')])
+    def test_consolidated(self):
+        """
+        Test for the consolidation function
+        """
+        self.assertEqual(
+            get_named_entities(
+                "Apple announced it would negotiate a deal with Microsoft for $1 billion."
+            ),
+            [
+                ("ORGANIZATION", "Apple"),
+                ("ORGANIZATION", "Microsoft"),
+                ("MONEY", "$1 billion"),
+            ],
+        )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

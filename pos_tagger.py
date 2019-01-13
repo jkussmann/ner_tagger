@@ -10,7 +10,6 @@ import sys
 from nltk.tag.sequential import ClassifierBasedPOSTagger
 from nltk.tag import DefaultTagger
 
-# from nltk.tree import *
 from nltk.corpus import treebank
 from nltk.parse import CoreNLPParser
 
